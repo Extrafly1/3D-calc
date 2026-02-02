@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор стоимости 3D-модели</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e6e6e6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #4cc9f0, #4361ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #b8b8b8;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .calculator-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .params-column {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(30, 30, 46, 0.8);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+        
+        .results-column {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(30, 30, 46, 0.8);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4361ee;
+            color: #f8f9fa;
+        }
+        
+        .param-group {
+            margin-bottom: 25px;
+            background: rgba(40, 40, 60, 0.5);
+            padding: 18px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .param-group:hover {
+            background: rgba(50, 50, 70, 0.6);
+            transform: translateY(-2px);
+        }
+        
+        .param-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #4cc9f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .param-title i {
+            font-size: 1.1rem;
+        }
+        
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .option-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-radius: 8px;
+            background: rgba(60, 60, 80, 0.4);
+            transition: all 0.2s ease;
+        }
+        
+        .option-item:hover {
+            background: rgba(80, 80, 100, 0.5);
+        }
+        
+        .option-item input[type="checkbox"] {
+            margin-right: 12px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #4361ee;
+        }
+        
+        .option-item label {
+            flex: 1;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .price-badge {
+            background: rgba(67, 97, 238, 0.3);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #a5b4fc;
+            min-width: 100px;
+            text-align: center;
+        }
+        
+        .price-tag {
+            background: linear-gradient(90deg, #4361ee, #3a0ca3);
+            color: white;
+            font-weight: bold;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            min-width: 100px;
+            text-align: center;
+        }
+        
+        .hourly-rate-container {
+            margin: 25px 0;
+            padding: 20px;
+            background: rgba(40, 40, 60, 0.5);
+            border-radius: 10px;
+            border-left: 4px solid #4cc9f0;
+        }
+        
+        .rate-input {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .rate-input label {
+            font-size: 1.1rem;
+            white-space: nowrap;
+        }
+        
+        .rate-input input {
+            flex: 1;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 2px solid rgba(67, 97, 238, 0.5);
+            background: rgba(20, 20, 30, 0.8);
+            color: white;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .rate-input input:focus {
+            outline: none;
+            border-color: #4361ee;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.3);
+        }
+        
+        .rate-slider {
+            width: 100%;
+            margin-top: 15px;
+            -webkit-appearance: none;
+            height: 8px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            outline: none;
+        }
+        
+        .rate-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #4361ee;
+            cursor: pointer;
+            border: 3px solid white;
+        }
+        
+        .rate-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 0.9rem;
+            color: #b8b8b8;
+        }
+        
+        .manual-hours-container {
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(40, 40, 60, 0.5);
+            border-radius: 10px;
+            border-left: 4px solid #f72585;
+        }
+        
+        .manual-hours-input {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .manual-hours-input label {
+            font-size: 1.1rem;
+            white-space: nowrap;
+        }
+        
+        .manual-hours-input input {
+            flex: 1;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 2px solid rgba(247, 37, 133, 0.5);
+            background: rgba(20, 20, 30, 0.8);
+            color: white;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .manual-hours-input input:focus {
+            outline: none;
+            border-color: #f72585;
+            box-shadow: 0 0 0 3px rgba(247, 37, 133, 0.3);
+        }
+        
+        .hours-hint {
+            margin-top: 8px;
+            font-size: 0.9rem;
+            color: #b8b8b8;
+            font-style: italic;
+        }
+        
+        .total-price {
+            background: linear-gradient(135deg, #3a0ca3, #4361ee);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: auto;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .total-label {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: #e6e6e6;
+        }
+        
+        .total-amount {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 10px;
+            text-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .total-currency {
+            font-size: 1.5rem;
+            color: #b8b8b8;
+            margin-bottom: 20px;
+        }
+        
+        .details {
+            margin-top: 30px;
+            background: rgba(40, 40, 60, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .details-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #4cc9f0;
+        }
+        
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .btn-calculate {
+            background: linear-gradient(90deg, #4361ee, #3a0ca3);
+            color: white;
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.4);
+        }
+        
+        .btn-calculate:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.6);
+        }
+        
+        .btn-reset {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e6e6e6;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn-reset:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+        
+        .info-box {
+            background: rgba(30, 30, 46, 0.8);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 40px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+        
+        .info-box h3 {
+            color: #4cc9f0;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .info-box ul {
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .info-box li {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #8a8a8a;
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .calculator-wrapper {
+                flex-direction: column;
+            }
+            h1 {
+                font-size: 2.2rem;
+            }
+            .total-amount {
+                font-size: 2.8rem;
+            }
+            .rate-input {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .rate-input input {
+                width: 100%;
+            }
+            .manual-hours-input {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .manual-hours-input input {
+                width: 100%;
+            }
+        }
+        
+        .complexity-indicator {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            margin: 10px 0 20px 0;
+            overflow: hidden;
+        }
+        
+        .complexity-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4cc9f0, #4361ee);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .complexity-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #b8b8b8;
+            margin-bottom: 5px;
+        }
+        
+        .time-estimate {
+            background: rgba(67, 97, 238, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 4px solid #4361ee;
+        }
+        
+        .time-source {
+            font-size: 0.85rem;
+            color: #b8b8b8;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .time-source i {
+            color: #4cc9f0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-cube"></i> Калькулятор стоимости 3D-модели</h1>
+            <p class="subtitle">Рассчитайте стоимость создания 3D-модели на основе множества параметров. Отметьте нужные опции, и калькулятор автоматически посчитает итоговую цену в рублях.</p>
+        </header>
+
+        <div class="calculator-wrapper">
+            <div class="params-column">
+                <h2 class="section-title"><i class="fas fa-sliders-h"></i> Параметры модели</h2>
+
+                <div class="hourly-rate-container">
+                    <h3 class="param-title"><i class="fas fa-clock"></i> Почасовая ставка (₽/час)</h3>
+                    <div class="rate-input">
+                        <label for="hourly-rate">Ставка:</label>
+                        <input type="number" id="hourly-rate" min="500" max="10000" step="100" value="3000">
+                        <span>₽/час</span>
+                    </div>
+                    <input type="range" id="hourly-rate-slider" class="rate-slider" min="500" max="10000" step="100" value="3000">
+                    <div class="rate-labels">
+                        <span>500 ₽</span>
+                        <span>2500 ₽</span>
+                        <span>5000 ₽</span>
+                        <span>7500 ₽</span>
+                        <span>10000 ₽</span>
+                    </div>
+                    <p style="margin-top: 15px; font-size: 0.9rem; color: #b8b8b8;">
+                        <i class="fas fa-info-circle"></i> Средние ставки: начинающий 500-1500₽/ч, средний 1500-3000₽/ч, профессионал 3000-6000₽/ч, студия 6000+₽/ч
+                    </p>
+                </div>
+
+                <div class="manual-hours-container">
+                    <h3 class="param-title"><i class="fas fa-hourglass-half"></i> Ручной ввод часов (опционально)</h3>
+                    <div class="manual-hours-input">
+                        <label for="manual-hours">Часы работы:</label>
+                        <input type="number" id="manual-hours" min="0" step="0.5" placeholder="Оставьте пустым для авто-расчета">
+                        <span>часов</span>
+                    </div>
+                    <div class="hours-hint">
+                        <i class="fas fa-info-circle"></i> Если оставить поле пустым, время будет рассчитано автоматически на основе выбранных параметров
+                    </div>
+                </div>
+
+                <div class="param-group">
+                    <h3 class="param-title"><i class="fas fa-shapes"></i> Тип модели</h3>
+                    <div class="options-list">
+                        <div class="option-item">
+                            <input type="checkbox" id="type-simple" data-price="500" data-hours="4">
+                            <label for="type-simple">Простой объект (мебель, оружие, props)
+                                <span class="price-badge">+ 500 ₽</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" id="type-complex" data-price="4000" data-hours="20">
+                            <label for="type-complex">Сложный объект (техника, органические формы)
+                                <span class="price-badge">+ 4 000 ₽</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" id="type-character" data-price="35000" data-hours="50">
+                            <label for="type-character">Персонаж (человек, животное, creature)
+                                <span class="price-badge">+ 25 000 ₽</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" id="type-architecture" data-price="36000" data-hours="40">
+                            <label for="type-architecture">Архитектура (здание, интерьер)
+                                <span class="price-badge">+ 36 000 ₽</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="param-group">
+                    <h3 class="param-title"><i class="fas fa-layer-group"></i> Детализация и полигоны</h3>
+                    <div class="options-list">
+                        <div class="option-item">
+                            <input type="checkbox" id="detail-low" data-price="0" data-hours="0">
+                            <label for="detail-low">Low-poly
+                                <span class="price-badge">Базово</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" id="detail-medium" data-price="900" data-hours="10">
+                            <label for="detail-medium">Medium
+                                <span class="price-badge">+ 900 ₽</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" id="detail-high" data-price="2700" data-hours="30">
+                            <label for="detail-high">High-poly
+                                <span class="price-badge">+ 2 700 ₽</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="param-group">
+                    <h3 class="param-title"><i class="fas fa-paint-brush"></i> Текстурирование</h3>
+                    <div class="options-list">
+                        <div class="option-item">
+                            <input type="checkbox" id="texture-none" data-price="0" data-hours="0">
+                            <label for="texture-none">Без текстур (только модель)
+                                <span class="price-badge">Базово</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" id="texture-simple" data-price="7200" data-hours="8">
+                            <label for="texture-simple">Простое (цвет, базовые материалы)
+                                <span class="price-badge">+ 7 200 ₽</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" id="texture-pbr" data-price="18000" data-hours="20">
+                            <label for="texture-pbr">PBR (физически корректные материалы)
+                                <span class="price-badge">+ 18 000 ₽</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" id="texture-handpaint" data-price="13500" data-hours="15">
+                            <label for="texture-handpaint">Hand-painted (стилизованные текстуры)
+                                <span class="price-badge">+ 13 500 ₽</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="param-group">
+                    <h3 class="param-title"><i class="fas fa-cogs"></i> Дополнительные работы</h3>
+                    <div class="options-list">
+                        <div class="option-item">
+                            <input type="checkbox" id="add-rigging" data-price="12800" data-hours="12">
+                            <label for="add-rigging">Риггинг (скелет для анимации)
+                                <span class="price-badge">+ 12 800 ₽</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" id="add-animation" data-price="18000" data-hours="25">
+                            <label for="add-animation">Анимация (базовый набор движений)
+                                <span class="price-badge">+ 18 000 ₽</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" id="add-lods" data-price="5400" data-hours="6">
+                            <label for="add-lods">LODs (уровни детализации)
+                                <span class="price-badge">+ 5 400 ₽</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" id="add-uv" data-price="4500" data-hours="5">
+                            <label for="add-uv">UV-развертка (если не включена)
+                                <span class="price-badge">+ 4 500 ₽</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" id="add-optimization" data-price="3600" data-hours="4">
+                            <label for="add-optimization">Оптимизация (ретопология)
+                                <span class="price-badge">+ 3 600 ₽</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" id="add-presentation" data-price="9000" data-hours="10">
+                            <label for="add-presentation">Рендер для презентации
+                                <span class="price-badge">+ 9 000 ₽</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="param-group">
+                    <h3 class="param-title"><i class="fas fa-file-contract"></i> Лицензия</h3>
+                    <div class="options-list">
+                        <div class="option-item">
+                            <input type="checkbox" id="license-personal" data-price="1" data-multiplier="1">
+                            <label for="license-personal">Персональная (некоммерческая)
+                                <span class="price-badge">1x</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" id="license-commercial" data-price="1.5" data-multiplier="1.5">
+                            <label for="license-commercial">Коммерческая (Indie/Стартап)
+                                <span class="price-badge">1.5x</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" id="license-aaa" data-price="3" data-multiplier="3">
+                            <label for="license-aaa">AAA (крупная компания)
+                                <span class="price-badge">3x</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" id="license-exclusive" data-price="5" data-multiplier="5">
+                            <label for="license-exclusive">Эксклюзив (полные права)
+                                <span class="price-badge">5x</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="param-group">
+                    <h3 class="param-title"><i class="fas fa-bolt"></i> Срочность</h3>
+                    <div class="options-list">
+                        <div class="option-item">
+                            <input type="checkbox" id="urgency-normal" data-price="1" data-urgency="1">
+                            <label for="urgency-normal">Обычный срок (7-14 дней)
+                                <span class="price-badge">1x</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" id="urgency-fast" data-price="1.5" data-urgency="1.5">
+                            <label for="urgency-fast">Срочно (3-7 дней)
+                                <span class="price-badge">1.5x</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" id="urgency-express" data-price="2" data-urgency="2">
+                            <label for="urgency-express">Экспресс (1-3 дня)
+                                <span class="price-badge">2x</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" id="urgency-critical" data-price="3" data-urgency="3">
+                            <label for="urgency-critical">Критично (24 часа)
+                                <span class="price-badge">3x</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="param-group">
+                    <h3 class="param-title"><i class="fas fa-file-export"></i> Форматы файлов</h3>
+                    <div class="options-list">
+                        <div class="option-item">
+                            <input type="checkbox" id="format-fbx" data-price="0" data-hours="0">
+                            <label for="format-fbx">FBX (стандартный)
+                                <span class="price-badge">Включено</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" id="format-obj" data-price="900" data-hours="0.5">
+                            <label for="format-obj">OBJ + MTL
+                                <span class="price-badge">+ 900 ₽</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" id="format-blend" data-price="1800" data-hours="1">
+                            <label for="format-blend">Blend (Blender)
+                                <span class="price-badge">+ 1 800 ₽</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" id="format-max" data-price="1800" data-hours="1">
+                            <label for="format-max">3D печать(STL)
+                                <span class="price-badge">+ 1 800 ₽</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" id="format-maya" data-price="1800" data-hours="1">
+                            <label for="format-maya">MA/MB (Maya)
+                                <span class="price-badge">+ 1 800 ₽</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" id="format-unity" data-price="2700" data-hours="1.5">
+                            <label for="format-unity">Unity Package
+                                <span class="price-badge">+ 2 700 ₽</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" id="format-unreal" data-price="2700" data-hours="1.5">
+                            <label for="format-unreal">Unreal Engine
+                                <span class="price-badge">+ 2 700 ₽</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn btn-calculate" id="calculate-btn">
+                        <i class="fas fa-calculator"></i> Рассчитать стоимость
+                    </button>
+                    <button class="btn btn-reset" id="reset-btn">
+                        <i class="fas fa-redo"></i> Сбросить
+                    </button>
+                </div>
+            </div>
+
+            <div class="results-column">
+                <h2 class="section-title"><i class="fas fa-chart-line"></i> Результаты расчета</h2>
+
+                <div class="complexity-label">
+                    <span>Сложность проекта:</span>
+                    <span id="complexity-text">Низкая</span>
+                </div>
+                <div class="complexity-indicator">
+                    <div class="complexity-fill" id="complexity-bar"></div>
+                </div>
+
+                <div class="total-price">
+                    <div class="total-label">Итоговая стоимость:</div>
+                    <div class="total-amount" id="total-price">0</div>
+                    <div class="total-currency">РУБЛЕЙ</div>
+                    <div class="time-estimate">
+                        <i class="far fa-clock"></i> Примерное время: <strong id="total-time">0</strong> часов
+                        <div class="time-source" id="time-source">
+                            <i class="fas fa-calculator"></i> Рассчитано автоматически
+                        </div>
+                    </div>
+                </div>
+
+                <div class="details">
+                    <h3 class="details-title"><i class="fas fa-list-alt"></i> Детализация расчета</h3>
+                    <div class="detail-item">
+                        <span>Базовая стоимость модели:</span>
+                        <span id="base-cost">0 ₽</span>
+                    </div>
+                    <div class="detail-item">
+                        <span>Детализация и текстуры:</span>
+                        <span id="detail-cost">0 ₽</span>
+                    </div>
+                    <div class="detail-item">
+                        <span>Дополнительные работы:</span>
+                        <span id="addons-cost">0 ₽</span>
+                    </div>
+                    <div class="detail-item">
+                        <span>Форматы файлов:</span>
+                        <span id="formats-cost">0 ₽</span>
+                    </div>
+                    <div class="detail-item">
+                        <span>Коэффициент лицензии:</span>
+                        <span id="license-multiplier">1x</span>
+                    </div>
+                    <div class="detail-item">
+                        <span>Коэффициент срочности:</span>
+                        <span id="urgency-multiplier">1x</span>
+                    </div>
+                    <div class="detail-item">
+                        <span>Почасовая ставка:</span>
+                        <span id="hour-rate">0 ₽/ч</span>
+                    </div>
+                    <div class="detail-item" style="margin-top: 10px; padding-top: 10px; border-top: 2px solid rgba(255, 255, 255, 0.2);">
+                        <span style="font-weight: bold;">Итого:</span>
+                        <span style="font-weight: bold;" id="final-cost">0 ₽</span>
+                    </div>
+                </div>
+
+                <div style="margin-top: 30px; font-size: 0.9rem; color: #b8b8b8; text-align: center;">
+                    <p><i class="fas fa-info-circle"></i> Цена рассчитана на основе средних рыночных ставок. Финальная стоимость может отличаться в зависимости от конкретных требований.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <h3><i class="fas fa-lightbulb"></i> Как использовать калькулятор</h3>
+            <ul>
+                <li><strong>Установите почасовую ставку</strong> - от 500 до 10000 ₽/час в зависимости от опыта художника.</li>
+                <li><strong>Введите количество часов (опционально)</strong> - если оставить поле пустым, время рассчитается автоматически.</li>
+                <li><strong>Выберите тип модели</strong> - от этого зависит базовая стоимость и время работы.</li>
+                <li><strong>Укажите детализацию</strong> - Low-poly, Medium или High-poly в зависимости от целей проекта.</li>
+                <li><strong>Определите текстурирование</strong> - без текстур, простое, PBR или Hand-painted.</li>
+                <li><strong>Отметьте дополнительные работы</strong> - риггинг, анимация, LODs, UV-развертка, оптимизация, рендеры.</li>
+                <li><strong>Выберите лицензию</strong> - от персонального использования до эксклюзивных прав.</li>
+                <li><strong>Определите срочность</strong> - сжатые сроки увеличивают стоимость.</li>
+                <li><strong>Выберите форматы файлов</strong> - дополнительные форматы увеличивают стоимость.</li>
+                <li><strong>Нажмите "Рассчитать стоимость"</strong> для получения итоговой цены в рублях.</li>
+            </ul>
+            <p>Калькулятор автоматически подсчитает общую стоимость, время выполнения и сложность проекта на основе выбранных параметров и почасовой ставки.</p>
+        </div>
+
+        <div class="footer">
+            <p>© 2026 Калькулятор стоимости 3D-моделей. Все цены указаны в рублях и являются ориентировочными.</p>
+            <p>Для точного расчета стоимости вашего проекта рекомендуем обратиться к профессиональному 3D-художнику.</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Получаем элементы
+            const calculateBtn = document.getElementById('calculate-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const totalPriceEl = document.getElementById('total-price');
+            const totalTimeEl = document.getElementById('total-time');
+            const timeSourceEl = document.getElementById('time-source');
+            const complexityBar = document.getElementById('complexity-bar');
+            const complexityText = document.getElementById('complexity-text');
+            const hourlyRateInput = document.getElementById('hourly-rate');
+            const hourlyRateSlider = document.getElementById('hourly-rate-slider');
+            const manualHoursInput = document.getElementById('manual-hours');
+
+            // Элементы для детализации
+            const baseCostEl = document.getElementById('base-cost');
+            const detailCostEl = document.getElementById('detail-cost');
+            const addonsCostEl = document.getElementById('addons-cost');
+            const formatsCostEl = document.getElementById('formats-cost');
+            const licenseMultiplierEl = document.getElementById('license-multiplier');
+            const urgencyMultiplierEl = document.getElementById('urgency-multiplier');
+            const hourRateEl = document.getElementById('hour-rate');
+            const finalCostEl = document.getElementById('final-cost');
+
+            // Группы чекбоксов (для исключения множественного выбора в группах)
+            const checkboxGroups = {
+                'type': ['type-simple', 'type-complex', 'type-character', 'type-architecture'],
+                'detail': ['detail-low', 'detail-medium', 'detail-high'],
+                'texture': ['texture-none', 'texture-simple', 'texture-pbr', 'texture-handpaint'],
+                'license': ['license-personal', 'license-commercial', 'license-aaa', 'license-exclusive'],
+                'urgency': ['urgency-normal', 'urgency-fast', 'urgency-express', 'urgency-critical']
+            };
+
+            // Синхронизация ползунка и поля ввода почасовой ставки
+            hourlyRateInput.addEventListener('input', function() {
+                hourlyRateSlider.value = this.value;
+                calculateCost();
+            });
+
+            hourlyRateSlider.addEventListener('input', function() {
+                hourlyRateInput.value = this.value;
+                calculateCost();
+            });
+
+            // Обработчик для ручного ввода часов
+            manualHoursInput.addEventListener('input', function() {
+                calculateCost();
+            });
+
+            // Настройка обработчиков для групп чекбоксов (только один выбран)
+            Object.keys(checkboxGroups).forEach(group => {
+                checkboxGroups[group].forEach(id => {
+                    const checkbox = document.getElementById(id);
+                    checkbox.addEventListener('change', function() {
+                        if (this.checked) {
+                            // Снимаем выбор с других чекбоксов в группе
+                            checkboxGroups[group].forEach(otherId => {
+                                if (otherId !== id) {
+                                    document.getElementById(otherId).checked = false;
+                                }
+                            });
+                        }
+                        calculateCost();
+                    });
+                });
+            });
+
+            // Для остальных чекбоксов (не входящих в группы) также добавляем обработчик
+            const otherCheckboxes = document.querySelectorAll('input[type="checkbox"]:not([id^="type-"]):not([id^="detail-"]):not([id^="texture-"]):not([id^="license-"]):not([id^="urgency-"])');
+            otherCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', calculateCost);
+            });
+
+            // Функция расчета стоимости
+            function calculateCost() {
+                let baseCost = 0;
+                let detailCost = 0;
+                let addonsCost = 0;
+                let formatsCost = 0;
+                let totalHours = 0;
+                let licenseMultiplier = 1;
+                let hourRate = parseInt(hourlyRateInput.value) || 3000;
+                let urgencyMultiplier = 1;
+                let useManualHours = false;
+
+                // Проверяем, введены ли ручные часы
+                const manualHoursValue = manualHoursInput.value.trim();
+                if (manualHoursValue !== '' && !isNaN(parseFloat(manualHoursValue)) && parseFloat(manualHoursValue) > 0) {
+                    totalHours = parseFloat(manualHoursValue);
+                    useManualHours = true;
+                    timeSourceEl.innerHTML = '<i class="fas fa-user-edit"></i> Введено вручную';
+                } else {
+                    // Сбор данных по всем чекбоксам для авто-расчета часов
+                    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+                    checkboxes.forEach(checkbox => {
+                        if (checkbox.checked) {
+                            const price = parseFloat(checkbox.getAttribute('data-price')) || 0;
+                            const hours = parseFloat(checkbox.getAttribute('data-hours')) || 0;
+                            const multiplier = parseFloat(checkbox.getAttribute('data-multiplier')) || 1;
+                            const urgency = parseFloat(checkbox.getAttribute('data-urgency')) || 1;
+
+                            // Категоризируем стоимость
+                            if (checkbox.id.startsWith('type-')) {
+                                baseCost += price;
+                                if (!useManualHours) totalHours += hours;
+                            } else if (checkbox.id.startsWith('detail-') || checkbox.id.startsWith('texture-')) {
+                                detailCost += price;
+                                if (!useManualHours) totalHours += hours;
+                            } else if (checkbox.id.startsWith('add-')) {
+                                addonsCost += price;
+                                if (!useManualHours) totalHours += hours;
+                            } else if (checkbox.id.startsWith('format-')) {
+                                formatsCost += price;
+                                if (!useManualHours) totalHours += hours;
+                            } else if (checkbox.id.startsWith('license-')) {
+                                licenseMultiplier = multiplier;
+                            } else if (checkbox.id.startsWith('urgency-')) {
+                                urgencyMultiplier = urgency;
+                            }
+                        }
+                    });
+
+                    timeSourceEl.innerHTML = '<i class="fas fa-calculator"></i> Рассчитано автоматически';
+                }
+
+                // Если не выбран тип модели и не введены ручные часы, устанавливаем минимальную базовую стоимость
+                if (baseCost === 0 && !useManualHours) {
+                    baseCost = 2700;
+                    if (!useManualHours) totalHours = 3;
+                }
+
+                // Если не выбрана детализация и не используется ручной ввод часов
+                if (!document.querySelector('input[id^="detail-"]:checked') && !useManualHours) {
+                    // Уже учтено в базовой стоимости
+                }
+
+                // Рассчитываем стоимость по времени как альтернативный вариант
+                const timeBasedCost = totalHours * hourRate;
+
+                // Итоговая стоимость (берем максимальную из стоимости по параметрам или по времени)
+                let finalCost = Math.max(baseCost + detailCost + addonsCost + formatsCost, timeBasedCost);
+
+                // Применяем коэффициенты
+                finalCost = finalCost * licenseMultiplier * urgencyMultiplier;
+
+                // Округляем до сотен
+                baseCost = Math.round(baseCost / 100) * 100;
+                detailCost = Math.round(detailCost / 100) * 100;
+                addonsCost = Math.round(addonsCost / 100) * 100;
+                formatsCost = Math.round(formatsCost / 100) * 100;
+                totalHours = Math.round(totalHours * 10) / 10;
+                finalCost = Math.round(finalCost / 100) * 100;
+
+                // Форматируем числа с разделителями тысяч
+                function formatNumber(num) {
+                    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+                }
+
+                // Обновляем интерфейс
+                totalPriceEl.textContent = formatNumber(finalCost);
+                totalTimeEl.textContent = totalHours;
+                baseCostEl.textContent = `${formatNumber(baseCost)} ₽`;
+                detailCostEl.textContent = `${formatNumber(detailCost)} ₽`;
+                addonsCostEl.textContent = `${formatNumber(addonsCost)} ₽`;
+                formatsCostEl.textContent = `${formatNumber(formatsCost)} ₽`;
+                licenseMultiplierEl.textContent = `${licenseMultiplier}x`;
+                urgencyMultiplierEl.textContent = `${urgencyMultiplier}x`;
+                hourRateEl.textContent = `${formatNumber(hourRate)} ₽/ч`;
+                finalCostEl.textContent = `${formatNumber(finalCost)} ₽`;
+
+                // Рассчитываем и отображаем сложность
+                let complexity = 0;
+
+                // Сложность на основе часов
+                if (totalHours < 10) complexity = 25;
+                else if (totalHours < 30) complexity = 50;
+                else if (totalHours < 60) complexity = 75;
+                else complexity = 95;
+
+                // Корректируем сложность на основе коэффициентов
+                complexity *= (licenseMultiplier * urgencyMultiplier) / 2;
+                complexity = Math.min(complexity, 100);
+
+                complexityBar.style.width = `${complexity}%`;
+
+                if (complexity < 30) complexityText.textContent = "Низкая";
+                else if (complexity < 60) complexityText.textContent = "Средняя";
+                else if (complexity < 85) complexityText.textContent = "Высокая";
+                else complexityText.textContent = "Очень высокая";
+            }
+
+            // Функция сброса
+            function resetCalculator() {
+                const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+
+                // Устанавливаем значения по умолчанию
+                hourlyRateInput.value = 3000;
+                hourlyRateSlider.value = 3000;
+                manualHoursInput.value = '';
+
+                // Устанавливаем базовые значения
+                document.getElementById('type-simple').checked = true;
+                document.getElementById('detail-low').checked = true;
+                document.getElementById('texture-none').checked = true;
+                document.getElementById('license-personal').checked = true;
+                document.getElementById('urgency-normal').checked = true;
+                document.getElementById('format-fbx').checked = true;
+
+                // Обновляем интерфейс
+                totalPriceEl.textContent = "0";
+                totalTimeEl.textContent = "0";
+                baseCostEl.textContent = "0 ₽";
+                detailCostEl.textContent = "0 ₽";
+                addonsCostEl.textContent = "0 ₽";
+                formatsCostEl.textContent = "0 ₽";
+                licenseMultiplierEl.textContent = "1x";
+                urgencyMultiplierEl.textContent = "1x";
+                hourRateEl.textContent = "0 ₽/ч";
+                finalCostEl.textContent = "0 ₽";
+                complexityBar.style.width = "0%";
+                complexityText.textContent = "Низкая";
+                timeSourceEl.innerHTML = '<i class="fas fa-calculator"></i> Рассчитано автоматически';
+
+                // Пересчитываем
+                calculateCost();
+            }
+
+            // Назначаем обработчики событий
+            calculateBtn.addEventListener('click', calculateCost);
+            resetBtn.addEventListener('click', resetCalculator);
+
+            // Инициализация с базовыми значениями
+            document.getElementById('type-simple').checked = true;
+            document.getElementById('detail-low').checked = true;
+            document.getElementById('texture-none').checked = true;
+            document.getElementById('license-personal').checked = true;
+            document.getElementById('urgency-normal').checked = true;
+            document.getElementById('format-fbx').checked = true;
+
+            // Первоначальный расчет
+            calculateCost();
+        });
+    </script>
+</body>
+
+</html>
