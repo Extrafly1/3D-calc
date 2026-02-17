@@ -13,19 +13,19 @@
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
         body {
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             color: #e6e6e6;
             min-height: 100vh;
             padding: 20px;
         }
-        
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
         }
-        
+
         header {
             text-align: center;
             margin-bottom: 30px;
@@ -34,7 +34,7 @@
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
-        
+
         h1 {
             font-size: 2.8rem;
             margin-bottom: 10px;
@@ -43,21 +43,21 @@
             -webkit-text-fill-color: transparent;
             text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
-        
+
         .subtitle {
             font-size: 1.2rem;
             color: #b8b8b8;
             max-width: 800px;
             margin: 0 auto;
         }
-        
+
         .calculator-wrapper {
             display: flex;
             flex-wrap: wrap;
             gap: 30px;
             margin-bottom: 40px;
         }
-        
+
         .params-column {
             flex: 1;
             min-width: 300px;
@@ -66,7 +66,7 @@
             padding: 25px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
         }
-        
+
         .results-column {
             flex: 1;
             min-width: 300px;
@@ -77,7 +77,7 @@
             display: flex;
             flex-direction: column;
         }
-        
+
         .section-title {
             font-size: 1.5rem;
             margin-bottom: 20px;
@@ -85,7 +85,7 @@
             border-bottom: 2px solid #4361ee;
             color: #f8f9fa;
         }
-        
+
         .param-group {
             margin-bottom: 25px;
             background: rgba(40, 40, 60, 0.5);
@@ -93,12 +93,12 @@
             border-radius: 10px;
             transition: all 0.3s ease;
         }
-        
+
         .param-group:hover {
             background: rgba(50, 50, 70, 0.6);
             transform: translateY(-2px);
         }
-        
+
         .param-title {
             font-size: 1.2rem;
             margin-bottom: 15px;
@@ -107,17 +107,17 @@
             align-items: center;
             gap: 10px;
         }
-        
+
         .param-title i {
             font-size: 1.1rem;
         }
-        
+
         .options-list {
             display: flex;
             flex-direction: column;
             gap: 12px;
         }
-        
+
         .option-item {
             display: flex;
             align-items: center;
@@ -126,11 +126,11 @@
             background: rgba(60, 60, 80, 0.4);
             transition: all 0.2s ease;
         }
-        
+
         .option-item:hover {
             background: rgba(80, 80, 100, 0.5);
         }
-        
+
         .option-item input[type="checkbox"],
         .option-item input[type="radio"] {
             margin-right: 12px;
@@ -139,7 +139,7 @@
             cursor: pointer;
             accent-color: #4361ee;
         }
-        
+
         .option-item label {
             flex: 1;
             cursor: pointer;
@@ -148,7 +148,7 @@
             justify-content: space-between;
             align-items: center;
         }
-        
+
         .price-badge {
             background: rgba(67, 97, 238, 0.3);
             padding: 4px 12px;
@@ -159,30 +159,31 @@
             min-width: 100px;
             text-align: center;
         }
-        
+
         .hourly-rate-container,
         .material-rate-container,
         .manual-hours-container,
-        .print-manual-container {
+        .print-manual-container,
+        .adjustment-container {
             margin: 25px 0;
             padding: 20px;
             background: rgba(40, 40, 60, 0.5);
             border-radius: 10px;
             border-left: 4px solid #4cc9f0;
         }
-        
+
         .rate-input {
             display: flex;
             align-items: center;
             gap: 15px;
             margin-top: 10px;
         }
-        
+
         .rate-input label {
             font-size: 1.1rem;
             white-space: nowrap;
         }
-        
+
         .rate-input input,
         .print-input input,
         .print-input select {
@@ -195,7 +196,7 @@
             font-size: 1.1rem;
             transition: all 0.3s ease;
         }
-        
+
         .rate-input input:focus,
         .print-input input:focus,
         .print-input select:focus {
@@ -203,8 +204,8 @@
             border-color: #4361ee;
             box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.3);
         }
+
         /* Стили для ручного ввода (розовая тема) */
-        
         .manual-hours-input,
         .print-manual-input {
             display: flex;
@@ -212,7 +213,7 @@
             gap: 15px;
             margin-top: 10px;
         }
-        
+
         .manual-hours-input input,
         .print-manual-input input {
             flex: 1;
@@ -224,14 +225,14 @@
             font-size: 1.1rem;
             transition: all 0.3s ease;
         }
-        
+
         .manual-hours-input input:focus,
         .print-manual-input input:focus {
             outline: none;
             border-color: #f72585;
             box-shadow: 0 0 0 3px rgba(247, 37, 133, 0.3);
         }
-        
+
         .rate-slider {
             width: 100%;
             margin-top: 15px;
@@ -241,7 +242,7 @@
             background: rgba(255, 255, 255, 0.1);
             outline: none;
         }
-        
+
         .rate-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
             width: 22px;
@@ -251,7 +252,7 @@
             cursor: pointer;
             border: 3px solid white;
         }
-        
+
         .rate-labels {
             display: flex;
             justify-content: space-between;
@@ -259,19 +260,19 @@
             font-size: 0.9rem;
             color: #b8b8b8;
         }
-        
+
         .manual-hours-container,
         .print-manual-container {
             border-left-color: #f72585;
         }
-        
+
         .hours-hint {
             margin-top: 8px;
             font-size: 0.9rem;
             color: #b8b8b8;
             font-style: italic;
         }
-        
+
         .total-price {
             background: linear-gradient(135deg, #3a0ca3, #4361ee);
             padding: 30px;
@@ -280,13 +281,13 @@
             margin-top: auto;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
         }
-        
+
         .total-label {
             font-size: 1.4rem;
             margin-bottom: 15px;
             color: #e6e6e6;
         }
-        
+
         .total-amount {
             font-size: 3.5rem;
             font-weight: 800;
@@ -294,37 +295,37 @@
             margin-bottom: 10px;
             text-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
         }
-        
+
         .total-currency {
             font-size: 1.5rem;
             color: #b8b8b8;
             margin-bottom: 20px;
         }
-        
+
         .details {
             margin-top: 30px;
             background: rgba(40, 40, 60, 0.5);
             padding: 20px;
             border-radius: 10px;
         }
-        
+
         .details-title {
             font-size: 1.2rem;
             margin-bottom: 15px;
             color: #4cc9f0;
         }
-        
+
         .detail-item {
             display: flex;
             justify-content: space-between;
             padding: 8px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
+
         .detail-item:last-child {
             border-bottom: none;
         }
-        
+
         .controls {
             display: flex;
             flex-wrap: wrap;
@@ -332,7 +333,7 @@
             gap: 10px;
             margin-top: 20px;
         }
-        
+
         .btn {
             padding: 12px 20px;
             border: none;
@@ -348,51 +349,51 @@
             flex: 1 1 auto;
             min-width: 140px;
         }
-        
+
         .btn-calculate {
             background: linear-gradient(90deg, #4361ee, #3a0ca3);
             color: white;
             box-shadow: 0 5px 15px rgba(67, 97, 238, 0.4);
         }
-        
+
         .btn-calculate:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(67, 97, 238, 0.6);
         }
-        
+
         .btn-reset {
             background: rgba(255, 255, 255, 0.1);
             color: #e6e6e6;
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
-        
+
         .btn-reset:hover {
             background: rgba(255, 255, 255, 0.2);
             transform: translateY(-3px);
         }
-        
+
         .btn-export {
             background: rgba(76, 201, 240, 0.2);
             color: #4cc9f0;
             border: 1px solid #4cc9f0;
         }
-        
+
         .btn-export:hover {
             background: rgba(76, 201, 240, 0.3);
             transform: translateY(-3px);
         }
-        
+
         .btn-import {
             background: rgba(247, 37, 133, 0.2);
             color: #f72585;
             border: 1px solid #f72585;
         }
-        
+
         .btn-import:hover {
             background: rgba(247, 37, 133, 0.3);
             transform: translateY(-3px);
         }
-        
+
         .info-box {
             background: rgba(30, 30, 46, 0.8);
             border-radius: 15px;
@@ -400,23 +401,23 @@
             margin-top: 40px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
         }
-        
+
         .info-box h3 {
             color: #4cc9f0;
             margin-bottom: 15px;
             font-size: 1.5rem;
         }
-        
+
         .info-box ul {
             padding-left: 20px;
             margin-bottom: 20px;
         }
-        
+
         .info-box li {
             margin-bottom: 10px;
             line-height: 1.5;
         }
-        
+
         .footer {
             text-align: center;
             margin-top: 40px;
@@ -425,7 +426,7 @@
             font-size: 0.9rem;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
+
         @media (max-width: 768px) {
             .calculator-wrapper {
                 flex-direction: column;
@@ -448,7 +449,7 @@
                 align-items: stretch;
             }
         }
-        
+
         .complexity-indicator {
             height: 8px;
             background: rgba(255, 255, 255, 0.1);
@@ -456,14 +457,14 @@
             margin: 10px 0 20px 0;
             overflow: hidden;
         }
-        
+
         .complexity-fill {
             height: 100%;
             background: linear-gradient(90deg, #4cc9f0, #4361ee);
             width: 0%;
             transition: width 0.5s ease;
         }
-        
+
         .complexity-label {
             display: flex;
             justify-content: space-between;
@@ -471,7 +472,7 @@
             color: #b8b8b8;
             margin-bottom: 5px;
         }
-        
+
         .time-estimate {
             background: rgba(67, 97, 238, 0.1);
             padding: 15px;
@@ -479,7 +480,7 @@
             margin-top: 20px;
             border-left: 4px solid #4361ee;
         }
-        
+
         .time-source {
             font-size: 0.85rem;
             color: #b8b8b8;
@@ -488,16 +489,20 @@
             align-items: center;
             gap: 5px;
         }
-        
+
         .time-source i {
             color: #4cc9f0;
         }
-        
+
         .separator {
             margin: 60px 0 30px;
             border: 0;
             height: 2px;
             background: linear-gradient(90deg, transparent, #4361ee, #4cc9f0, #4361ee, transparent);
+        }
+
+        .adjustment-container {
+            border-left-color: #f72585; /* розовый для отличия */
         }
     </style>
 </head>
@@ -984,7 +989,20 @@
                     </div>
                 </div>
 
-                <!-- Ручной ввод времени (исправленный блок) -->
+                <!-- Корректировка стоимости: скидка/наценка (процент брака) -->
+                <div class="adjustment-container">
+                    <h3 class="param-title"><i class="fas fa-percentage"></i> Корректировка стоимости</h3>
+                    <div class="rate-input">
+                        <label for="print-adjustment">Скидка/наценка %:</label>
+                        <input type="number" id="print-adjustment" min="-100" max="200" step="1" value="0" placeholder="0">
+                        <span>%</span>
+                    </div>
+                    <p style="font-size: 0.9rem; color: #b8b8b8; margin-top: 5px;">
+                        <i class="fas fa-info-circle"></i> Положительное значение = наценка (например, за риск брака), отрицательное = скидка.
+                    </p>
+                </div>
+
+                <!-- Ручной ввод времени -->
                 <div class="print-manual-container">
                     <h3 class="param-title"><i class="fas fa-hourglass-half"></i> Ручной ввод времени (опционально)</h3>
                     <div class="print-manual-input">
@@ -1051,6 +1069,10 @@
                         <span>Стоимость работы:</span>
                         <span id="print-labor-cost">0 ₽</span>
                     </div>
+                    <div class="detail-item">
+                        <span>Корректировка:</span>
+                        <span id="print-adjustment-display">0%</span>
+                    </div>
                     <div class="detail-item" style="margin-top: 10px; padding-top: 10px; border-top: 2px solid rgba(255, 255, 255, 0.2);">
                         <span style="font-weight: bold;">Итого:</span>
                         <span style="font-weight: bold;" id="print-final-cost">0 ₽</span>
@@ -1067,7 +1089,7 @@
             <h3><i class="fas fa-lightbulb"></i> Как использовать калькуляторы</h3>
             <ul>
                 <li><strong>Для моделирования:</strong> выберите параметры, установите ставку, при необходимости введите часы вручную. Кнопки экспорта/импорта позволяют сохранить и загрузить чек.</li>
-                <li><strong>Для печати:</strong> укажите стоимость материала, плотность, объём, тип печати, качество, поддержки, ставку за час. Также можно ввести время вручную.</li>
+                <li><strong>Для печати:</strong> укажите стоимость материала, плотность, объём, тип печати, качество, поддержки, ставку за час. Также можно ввести время вручную и применить скидку/наценку.</li>
                 <li><strong>Экспорт чека</strong> — сохраняет текущие настройки в JSON-файл.</li>
                 <li><strong>Импорт чека</strong> — загружает ранее сохранённый файл и восстанавливает все параметры.</li>
             </ul>
@@ -1142,13 +1164,8 @@
             });
 
             function calculateModelCost() {
-                let baseCost = 0,
-                    detailCost = 0,
-                    addonsCost = 0,
-                    formatsCost = 0,
-                    totalHours = 0;
-                let licenseMultiplier = 1,
-                    urgencyMultiplier = 1;
+                let baseCost = 0, detailCost = 0, addonsCost = 0, formatsCost = 0, totalHours = 0;
+                let licenseMultiplier = 1, urgencyMultiplier = 1;
                 let hourRate = parseInt(hourlyRateInput.value) || 3000;
                 let useManualHours = false;
 
@@ -1305,9 +1322,7 @@
             exportModelBtn.addEventListener('click', function() {
                 const state = getModelState();
                 const json = JSON.stringify(state, null, 2);
-                const blob = new Blob([json], {
-                    type: 'application/json'
-                });
+                const blob = new Blob([json], { type: 'application/json' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
@@ -1349,6 +1364,7 @@
             const printQualityHigh = document.getElementById('print-quality-high');
             const printSupports = document.getElementById('print-supports');
             const printHourRate = document.getElementById('print-hour-rate');
+            const printAdjustment = document.getElementById('print-adjustment'); // новое поле
             const printManualHours = document.getElementById('print-manual-hours');
 
             const printTotalPrice = document.getElementById('print-total-price');
@@ -1359,6 +1375,7 @@
             const printAutoTime = document.getElementById('print-auto-time');
             const printHourRateDisplay = document.getElementById('print-hour-rate-display');
             const printLaborCost = document.getElementById('print-labor-cost');
+            const printAdjustmentDisplay = document.getElementById('print-adjustment-display'); // для отображения процента
             const printFinalCost = document.getElementById('print-final-cost');
 
             const printCalculateBtn = document.getElementById('print-calculate-btn');
@@ -1368,6 +1385,9 @@
                 printInfillValue.textContent = this.value + '%';
                 calculatePrintCost();
             });
+
+            // Слушатель на корректировку
+            printAdjustment.addEventListener('input', calculatePrintCost);
 
             function toggleInfillGroup() {
                 const isSla = printSla.checked;
@@ -1387,7 +1407,7 @@
 
             const printInputs = [
                 printMaterialPrice, printDensity, printVolume, printInfill,
-                printHourRate, printManualHours, printSupports,
+                printHourRate, printAdjustment, printManualHours, printSupports,
                 printQualityLow, printQualityMedium, printQualityHigh
             ];
             printInputs.forEach(input => input.addEventListener('input', calculatePrintCost));
@@ -1403,6 +1423,7 @@
                 const isSla = printSla.checked;
                 const infill = isSla ? 100 : (parseFloat(printInfill.value) || 0);
                 const hourRate = parseFloat(printHourRate.value) || 0;
+                const adjustmentPercent = parseFloat(printAdjustment.value) || 0;
 
                 let quality = 'medium';
                 if (printQualityLow.checked) quality = 'low';
@@ -1434,7 +1455,11 @@
 
                 const totalHours = useManual ? manualHours : autoHours;
                 const laborCost = totalHours * hourRate;
-                const finalCost = materialCost + laborCost;
+                let finalCost = materialCost + laborCost;
+
+                // Применяем корректировку (процент)
+                const adjustmentFactor = 1 + adjustmentPercent / 100;
+                finalCost = finalCost * adjustmentFactor;
 
                 function formatNumber(num) {
                     return Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
@@ -1448,6 +1473,7 @@
                 printAutoTime.textContent = autoHours.toFixed(1) + ' ч';
                 printHourRateDisplay.textContent = hourRate + ' ₽/ч';
                 printLaborCost.textContent = formatNumber(laborCost) + ' ₽';
+                printAdjustmentDisplay.textContent = (adjustmentPercent >= 0 ? '+' : '') + adjustmentPercent + '%';
                 printFinalCost.textContent = formatNumber(finalCost) + ' ₽';
             }
 
@@ -1463,6 +1489,7 @@
                 printQualityMedium.checked = true;
                 printSupports.checked = false;
                 printHourRate.value = 200;
+                printAdjustment.value = 0;
                 printManualHours.value = '';
 
                 calculatePrintCost();
@@ -1486,6 +1513,7 @@
                     quality: printQualityLow.checked ? 'low' : (printQualityMedium.checked ? 'medium' : 'high'),
                     supports: printSupports.checked,
                     hourRate: printHourRate.value,
+                    adjustment: printAdjustment.value,
                     manualHours: printManualHours.value
                 };
             }
@@ -1508,6 +1536,7 @@
                 else printQualityHigh.checked = true;
                 printSupports.checked = state.supports;
                 printHourRate.value = state.hourRate;
+                printAdjustment.value = state.adjustment || 0;
                 printManualHours.value = state.manualHours;
                 // обновить состояние infill (блокировка при SLA)
                 toggleInfillGroup();
@@ -1517,9 +1546,7 @@
             exportPrintBtn.addEventListener('click', function() {
                 const state = getPrintState();
                 const json = JSON.stringify(state, null, 2);
-                const blob = new Blob([json], {
-                    type: 'application/json'
-                });
+                const blob = new Blob([json], { type: 'application/json' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
