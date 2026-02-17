@@ -4,10 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Калькулятор стоимости 3D-модели</title>
+    <title>Калькуляторы 3D: моделирование и печать</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* === Все предыдущие стили остаются без изменений === */
         * {
             margin: 0;
             padding: 0;
@@ -132,7 +131,8 @@
             background: rgba(80, 80, 100, 0.5);
         }
         
-        .option-item input[type="checkbox"] {
+        .option-item input[type="checkbox"],
+        .option-item input[type="radio"] {
             margin-right: 12px;
             width: 20px;
             height: 20px;
@@ -160,18 +160,10 @@
             text-align: center;
         }
         
-        .price-tag {
-            background: linear-gradient(90deg, #4361ee, #3a0ca3);
-            color: white;
-            font-weight: bold;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            min-width: 100px;
-            text-align: center;
-        }
-        
-        .hourly-rate-container {
+        .hourly-rate-container,
+        .material-rate-container,
+        .manual-hours-container,
+        .print-manual-container {
             margin: 25px 0;
             padding: 20px;
             background: rgba(40, 40, 60, 0.5);
@@ -191,7 +183,9 @@
             white-space: nowrap;
         }
         
-        .rate-input input {
+        .rate-input input,
+        .print-input input,
+        .print-input select {
             flex: 1;
             padding: 12px 15px;
             border-radius: 8px;
@@ -202,10 +196,40 @@
             transition: all 0.3s ease;
         }
         
-        .rate-input input:focus {
+        .rate-input input:focus,
+        .print-input input:focus,
+        .print-input select:focus {
             outline: none;
             border-color: #4361ee;
             box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.3);
+        }
+        /* Стили для ручного ввода (розовая тема) */
+        
+        .manual-hours-input,
+        .print-manual-input {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .manual-hours-input input,
+        .print-manual-input input {
+            flex: 1;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 2px solid rgba(247, 37, 133, 0.5);
+            background: rgba(20, 20, 30, 0.8);
+            color: white;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .manual-hours-input input:focus,
+        .print-manual-input input:focus {
+            outline: none;
+            border-color: #f72585;
+            box-shadow: 0 0 0 3px rgba(247, 37, 133, 0.3);
         }
         
         .rate-slider {
@@ -236,41 +260,9 @@
             color: #b8b8b8;
         }
         
-        .manual-hours-container {
-            margin: 15px 0;
-            padding: 15px;
-            background: rgba(40, 40, 60, 0.5);
-            border-radius: 10px;
-            border-left: 4px solid #f72585;
-        }
-        
-        .manual-hours-input {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-top: 10px;
-        }
-        
-        .manual-hours-input label {
-            font-size: 1.1rem;
-            white-space: nowrap;
-        }
-        
-        .manual-hours-input input {
-            flex: 1;
-            padding: 12px 15px;
-            border-radius: 8px;
-            border: 2px solid rgba(247, 37, 133, 0.5);
-            background: rgba(20, 20, 30, 0.8);
-            color: white;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-        }
-        
-        .manual-hours-input input:focus {
-            outline: none;
-            border-color: #f72585;
-            box-shadow: 0 0 0 3px rgba(247, 37, 133, 0.3);
+        .manual-hours-container,
+        .print-manual-container {
+            border-left-color: #f72585;
         }
         
         .hours-hint {
@@ -335,24 +327,26 @@
         
         .controls {
             display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 20px;
             flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
         }
         
         .btn {
-            padding: 14px 28px;
+            padding: 12px 20px;
             border: none;
             border-radius: 10px;
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
+            flex: 1 1 auto;
+            min-width: 140px;
         }
         
         .btn-calculate {
@@ -376,8 +370,7 @@
             background: rgba(255, 255, 255, 0.2);
             transform: translateY(-3px);
         }
-
-        /* Новые стили для кнопок экспорта/импорта */
+        
         .btn-export {
             background: rgba(76, 201, 240, 0.2);
             color: #4cc9f0;
@@ -450,12 +443,9 @@
             .rate-input input {
                 width: 100%;
             }
-            .manual-hours-input {
+            .controls {
                 flex-direction: column;
-                align-items: flex-start;
-            }
-            .manual-hours-input input {
-                width: 100%;
+                align-items: stretch;
             }
         }
         
@@ -502,6 +492,13 @@
         .time-source i {
             color: #4cc9f0;
         }
+        
+        .separator {
+            margin: 60px 0 30px;
+            border: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #4361ee, #4cc9f0, #4361ee, transparent);
+        }
     </style>
 </head>
 
@@ -512,6 +509,7 @@
             <p class="subtitle">Рассчитайте стоимость создания 3D-модели на основе множества параметров. Отметьте нужные опции, и калькулятор автоматически посчитает итоговую цену в рублях.</p>
         </header>
 
+        <!-- Калькулятор 3D-моделирования (первый) -->
         <div class="calculator-wrapper">
             <div class="params-column">
                 <h2 class="section-title"><i class="fas fa-sliders-h"></i> Параметры модели</h2>
@@ -787,17 +785,16 @@
                         <i class="fas fa-calculator"></i> Рассчитать
                     </button>
                     <button class="btn btn-reset" id="reset-btn">
-                        <i class="fas fa-redo"></i> Сброс
+                        <i class="fas fa-redo"></i> Сбросить
                     </button>
-                    <button class="btn btn-export" id="export-btn">
-                        <i class="fas fa-download"></i> Экспорт
+                    <button class="btn btn-export" id="export-model-btn">
+                        <i class="fas fa-download"></i> Экспорт чека
                     </button>
-                    <button class="btn btn-import" id="import-btn">
-                        <i class="fas fa-upload"></i> Импорт
+                    <button class="btn btn-import" id="import-model-btn">
+                        <i class="fas fa-upload"></i> Импорт чека
                     </button>
+                    <input type="file" id="import-model-file" accept=".json,application/json" style="display: none;">
                 </div>
-                <!-- Скрытый input для загрузки файла -->
-                <input type="file" id="import-file" accept=".json,application/json" style="display: none;">
             </div>
 
             <div class="results-column">
@@ -865,37 +862,228 @@
             </div>
         </div>
 
+        <hr class="separator">
+
+        <!-- Калькулятор 3D-печати (второй) -->
+        <header style="margin-top: 20px;">
+            <h1><i class="fas fa-print"></i> Калькулятор стоимости 3D-печати</h1>
+            <p class="subtitle">Рассчитайте стоимость печати модели на 3D-принтере. Укажите параметры материала, объём, тип печати и качество.</p>
+        </header>
+
+        <div class="calculator-wrapper">
+            <div class="params-column">
+                <h2 class="section-title"><i class="fas fa-sliders-h"></i> Параметры печати</h2>
+
+                <!-- Стоимость материала за кг -->
+                <div class="material-rate-container">
+                    <h3 class="param-title"><i class="fas fa-dollar-sign"></i> Стоимость материала (₽/кг)</h3>
+                    <div class="rate-input">
+                        <label for="print-material-price">Цена за кг:</label>
+                        <input type="number" id="print-material-price" min="100" max="20000" step="100" value="2500">
+                        <span>₽/кг</span>
+                    </div>
+                </div>
+
+                <!-- Плотность материала -->
+                <div class="material-rate-container" style="border-left-color: #f72585;">
+                    <h3 class="param-title"><i class="fas fa-weight"></i> Плотность материала (г/см³)</h3>
+                    <div class="rate-input">
+                        <label for="print-density">Плотность:</label>
+                        <input type="number" id="print-density" min="0.5" max="3" step="0.01" value="1.25">
+                        <span>г/см³</span>
+                    </div>
+                    <p style="font-size: 0.9rem; color: #b8b8b8; margin-top: 5px;">
+                        <i class="fas fa-info-circle"></i> PLA ~1.25, ABS ~1.05, PETG ~1.27, смола ~1.1
+                    </p>
+                </div>
+
+                <!-- Объём модели -->
+                <div class="material-rate-container">
+                    <h3 class="param-title"><i class="fas fa-cube"></i> Объём модели (см³)</h3>
+                    <div class="rate-input">
+                        <label for="print-volume">Объём:</label>
+                        <input type="number" id="print-volume" min="0.1" step="0.1" value="50">
+                        <span>см³</span>
+                    </div>
+                </div>
+
+                <!-- Тип печати: FDM или SLA -->
+                <div class="param-group">
+                    <h3 class="param-title"><i class="fas fa-print"></i> Тип печати</h3>
+                    <div class="options-list">
+                        <div class="option-item">
+                            <input type="radio" name="print-type" id="print-fdm" value="fdm" checked>
+                            <label for="print-fdm">Обычная (FDM)
+                                <span class="price-badge">Пластик</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="print-type" id="print-sla" value="sla">
+                            <label for="print-sla">Фотополимерная (SLA/DLP)
+                                <span class="price-badge">Смола</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Заполнение (infill) -->
+                <div class="param-group" id="infill-group">
+                    <h3 class="param-title"><i class="fas fa-percent"></i> Заполнение (infill) %</h3>
+                    <div class="rate-input">
+                        <input type="range" id="print-infill" min="0" max="100" step="5" value="20">
+                        <span id="print-infill-value">20%</span>
+                    </div>
+                    <p style="font-size: 0.9rem; color: #b8b8b8; margin-top: 5px;">Для фотополимера всегда 100%</p>
+                </div>
+
+                <!-- Качество печати -->
+                <div class="param-group">
+                    <h3 class="param-title"><i class="fas fa-gem"></i> Качество печати</h3>
+                    <div class="options-list">
+                        <div class="option-item">
+                            <input type="radio" name="print-quality" id="print-quality-low" value="low">
+                            <label for="print-quality-low">Черновое (быстро)
+                                <span class="price-badge">0.3 мм слой</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="print-quality" id="print-quality-medium" value="medium" checked>
+                            <label for="print-quality-medium">Стандартное
+                                <span class="price-badge">0.2 мм слой</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="print-quality" id="print-quality-high" value="high">
+                            <label for="print-quality-high">Высокое (медленно)
+                                <span class="price-badge">0.1 мм слой</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Поддержки -->
+                <div class="param-group">
+                    <h3 class="param-title"><i class="fas fa-hand-paper"></i> Поддержки</h3>
+                    <div class="options-list">
+                        <div class="option-item">
+                            <input type="checkbox" id="print-supports">
+                            <label for="print-supports">Требуются поддержки
+                                <span class="price-badge">+20% времени</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Почасовая ставка за работу принтера -->
+                <div class="material-rate-container">
+                    <h3 class="param-title"><i class="fas fa-clock"></i> Ставка за час печати (₽/ч)</h3>
+                    <div class="rate-input">
+                        <label for="print-hour-rate">Ставка:</label>
+                        <input type="number" id="print-hour-rate" min="10" max="1000" step="10" value="200">
+                        <span>₽/ч</span>
+                    </div>
+                </div>
+
+                <!-- Ручной ввод времени (исправленный блок) -->
+                <div class="print-manual-container">
+                    <h3 class="param-title"><i class="fas fa-hourglass-half"></i> Ручной ввод времени (опционально)</h3>
+                    <div class="print-manual-input">
+                        <label for="print-manual-hours">Время печати:</label>
+                        <input type="number" id="print-manual-hours" min="0" step="0.5" placeholder="Оставьте пустым для авто-расчета">
+                        <span>часов</span>
+                    </div>
+                    <div class="hours-hint">
+                        <i class="fas fa-info-circle"></i> Если оставить поле пустым, время будет рассчитано автоматически
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn btn-calculate" id="print-calculate-btn">
+                        <i class="fas fa-calculator"></i> Рассчитать
+                    </button>
+                    <button class="btn btn-reset" id="print-reset-btn">
+                        <i class="fas fa-redo"></i> Сбросить
+                    </button>
+                    <button class="btn btn-export" id="export-print-btn">
+                        <i class="fas fa-download"></i> Экспорт чека
+                    </button>
+                    <button class="btn btn-import" id="import-print-btn">
+                        <i class="fas fa-upload"></i> Импорт чека
+                    </button>
+                    <input type="file" id="import-print-file" accept=".json,application/json" style="display: none;">
+                </div>
+            </div>
+
+            <div class="results-column">
+                <h2 class="section-title"><i class="fas fa-chart-line"></i> Результаты печати</h2>
+
+                <div class="total-price">
+                    <div class="total-label">Итоговая стоимость:</div>
+                    <div class="total-amount" id="print-total-price">0</div>
+                    <div class="total-currency">РУБЛЕЙ</div>
+                    <div class="time-estimate">
+                        <i class="far fa-clock"></i> Время печати: <strong id="print-total-time">0</strong> часов
+                        <div class="time-source" id="print-time-source">
+                            <i class="fas fa-calculator"></i> Рассчитано автоматически
+                        </div>
+                    </div>
+                </div>
+
+                <div class="details">
+                    <h3 class="details-title"><i class="fas fa-list-alt"></i> Детализация расчета</h3>
+                    <div class="detail-item">
+                        <span>Материал (вес):</span>
+                        <span id="print-material-weight">0 г</span>
+                    </div>
+                    <div class="detail-item">
+                        <span>Стоимость материала:</span>
+                        <span id="print-material-cost">0 ₽</span>
+                    </div>
+                    <div class="detail-item">
+                        <span>Время печати (авто):</span>
+                        <span id="print-auto-time">0 ч</span>
+                    </div>
+                    <div class="detail-item">
+                        <span>Ставка за час:</span>
+                        <span id="print-hour-rate-display">200 ₽/ч</span>
+                    </div>
+                    <div class="detail-item">
+                        <span>Стоимость работы:</span>
+                        <span id="print-labor-cost">0 ₽</span>
+                    </div>
+                    <div class="detail-item" style="margin-top: 10px; padding-top: 10px; border-top: 2px solid rgba(255, 255, 255, 0.2);">
+                        <span style="font-weight: bold;">Итого:</span>
+                        <span style="font-weight: bold;" id="print-final-cost">0 ₽</span>
+                    </div>
+                </div>
+
+                <div style="margin-top: 30px; font-size: 0.9rem; color: #b8b8b8; text-align: center;">
+                    <p><i class="fas fa-info-circle"></i> Расчёт времени приблизительный. Для точного времени используйте слайсер.</p>
+                </div>
+            </div>
+        </div>
+
         <div class="info-box">
-            <h3><i class="fas fa-lightbulb"></i> Как использовать калькулятор</h3>
+            <h3><i class="fas fa-lightbulb"></i> Как использовать калькуляторы</h3>
             <ul>
-                <li><strong>Установите почасовую ставку</strong> - от 500 до 10000 ₽/час в зависимости от опыта художника.</li>
-                <li><strong>Введите количество часов (опционально)</strong> - если оставить поле пустым, время рассчитается автоматически.</li>
-                <li><strong>Выберите тип модели</strong> - от этого зависит базовая стоимость и время работы.</li>
-                <li><strong>Укажите детализацию</strong> - Low-poly, Medium или High-poly в зависимости от целей проекта.</li>
-                <li><strong>Определите текстурирование</strong> - без текстур, простое, PBR или Hand-painted.</li>
-                <li><strong>Отметьте дополнительные работы</strong> - риггинг, анимация, LODs, UV-развертка, оптимизация, рендеры.</li>
-                <li><strong>Выберите лицензию</strong> - от персонального использования до эксклюзивных прав.</li>
-                <li><strong>Определите срочность</strong> - сжатые сроки увеличивают стоимость.</li>
-                <li><strong>Выберите форматы файлов</strong> - дополнительные форматы увеличивают стоимость.</li>
-                <li><strong>Нажмите "Рассчитать стоимость"</strong> для получения итоговой цены в рублях.</li>
+                <li><strong>Для моделирования:</strong> выберите параметры, установите ставку, при необходимости введите часы вручную. Кнопки экспорта/импорта позволяют сохранить и загрузить чек.</li>
+                <li><strong>Для печати:</strong> укажите стоимость материала, плотность, объём, тип печати, качество, поддержки, ставку за час. Также можно ввести время вручную.</li>
+                <li><strong>Экспорт чека</strong> — сохраняет текущие настройки в JSON-файл.</li>
+                <li><strong>Импорт чека</strong> — загружает ранее сохранённый файл и восстанавливает все параметры.</li>
             </ul>
-            <p>Калькулятор автоматически подсчитает общую стоимость, время выполнения и сложность проекта на основе выбранных параметров и почасовой ставки.</p>
         </div>
 
         <div class="footer">
-            <p>© 2026 Калькулятор стоимости 3D-моделей. Все цены указаны в рублях и являются ориентировочными.</p>
-            <p>Для точного расчета стоимости вашего проекта рекомендуем обратиться к профессиональному 3D-художнику.</p>
+            <p>© 2026 Калькуляторы 3D-моделирования и печати. Все цены ориентировочные.</p>
+            <p>Для точного расчёта обращайтесь к специалистам.</p>
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Получаем элементы
+            // ========== Калькулятор 3D-моделирования (первый) ==========
             const calculateBtn = document.getElementById('calculate-btn');
             const resetBtn = document.getElementById('reset-btn');
-            const exportBtn = document.getElementById('export-btn');
-            const importBtn = document.getElementById('import-btn');
-            const importFileInput = document.getElementById('import-file');
             const totalPriceEl = document.getElementById('total-price');
             const totalTimeEl = document.getElementById('total-time');
             const timeSourceEl = document.getElementById('time-source');
@@ -905,7 +1093,6 @@
             const hourlyRateSlider = document.getElementById('hourly-rate-slider');
             const manualHoursInput = document.getElementById('manual-hours');
 
-            // Элементы для детализации
             const baseCostEl = document.getElementById('base-cost');
             const detailCostEl = document.getElementById('detail-cost');
             const addonsCostEl = document.getElementById('addons-cost');
@@ -915,7 +1102,6 @@
             const hourRateEl = document.getElementById('hour-rate');
             const finalCostEl = document.getElementById('final-cost');
 
-            // Группы чекбоксов (для исключения множественного выбора в группах)
             const checkboxGroups = {
                 'type': ['type-simple', 'type-complex', 'type-character', 'type-architecture'],
                 'detail': ['detail-low', 'detail-medium', 'detail-high'],
@@ -924,81 +1110,55 @@
                 'urgency': ['urgency-normal', 'urgency-fast', 'urgency-express', 'urgency-critical']
             };
 
-            // Синхронизация ползунка и поля ввода почасовой ставки
             hourlyRateInput.addEventListener('input', function() {
                 hourlyRateSlider.value = this.value;
-                calculateCost();
+                calculateModelCost();
             });
-
             hourlyRateSlider.addEventListener('input', function() {
                 hourlyRateInput.value = this.value;
-                calculateCost();
+                calculateModelCost();
             });
+            manualHoursInput.addEventListener('input', calculateModelCost);
 
-            // Обработчик для ручного ввода часов
-            manualHoursInput.addEventListener('input', function() {
-                calculateCost();
-            });
-
-            // Настройка обработчиков для групп чекбоксов (только один выбран)
             Object.keys(checkboxGroups).forEach(group => {
                 checkboxGroups[group].forEach(id => {
                     const checkbox = document.getElementById(id);
                     checkbox.addEventListener('change', function() {
                         if (this.checked) {
-                            // Снимаем выбор с других чекбоксов в группе
                             checkboxGroups[group].forEach(otherId => {
                                 if (otherId !== id) {
                                     document.getElementById(otherId).checked = false;
                                 }
                             });
                         }
-                        calculateCost();
+                        calculateModelCost();
                     });
                 });
             });
 
-            // Для остальных чекбоксов (не входящих в группы) также добавляем обработчик
-            const otherCheckboxes = document.querySelectorAll('input[type="checkbox"]:not([id^="type-"]):not([id^="detail-"]):not([id^="texture-"]):not([id^="license-"]):not([id^="urgency-"])');
+            const otherCheckboxes = document.querySelectorAll('.params-column input[type="checkbox"]:not([id^="type-"]):not([id^="detail-"]):not([id^="texture-"]):not([id^="license-"]):not([id^="urgency-"])');
             otherCheckboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', calculateCost);
+                checkbox.addEventListener('change', calculateModelCost);
             });
 
-            // Функция принудительного соблюдения правил групп (один выбор)
-            function enforceGroupRules() {
-                Object.values(checkboxGroups).forEach(group => {
-                    const checkedInGroup = group.filter(id => document.getElementById(id).checked);
-                    if (checkedInGroup.length > 1) {
-                        // Оставляем только первый, остальные снимаем
-                        for (let i = 1; i < checkedInGroup.length; i++) {
-                            document.getElementById(checkedInGroup[i]).checked = false;
-                        }
-                    }
-                });
-            }
-
-            // Функция расчета стоимости
-            function calculateCost() {
-                let baseCost = 0;
-                let detailCost = 0;
-                let addonsCost = 0;
-                let formatsCost = 0;
-                let totalHours = 0;
-                let licenseMultiplier = 1;
+            function calculateModelCost() {
+                let baseCost = 0,
+                    detailCost = 0,
+                    addonsCost = 0,
+                    formatsCost = 0,
+                    totalHours = 0;
+                let licenseMultiplier = 1,
+                    urgencyMultiplier = 1;
                 let hourRate = parseInt(hourlyRateInput.value) || 3000;
-                let urgencyMultiplier = 1;
                 let useManualHours = false;
 
-                // Проверяем, введены ли ручные часы
                 const manualHoursValue = manualHoursInput.value.trim();
                 if (manualHoursValue !== '' && !isNaN(parseFloat(manualHoursValue)) && parseFloat(manualHoursValue) > 0) {
                     totalHours = parseFloat(manualHoursValue);
                     useManualHours = true;
                     timeSourceEl.innerHTML = '<i class="fas fa-user-edit"></i> Введено вручную';
                 } else {
-                    // Сбор данных по всем чекбоксам для авто-расчета часов
-                    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-
+                    const checkboxes = document.querySelectorAll('.params-column input[type="checkbox"]');
                     checkboxes.forEach(checkbox => {
                         if (checkbox.checked) {
                             const price = parseFloat(checkbox.getAttribute('data-price')) || 0;
@@ -1006,19 +1166,18 @@
                             const multiplier = parseFloat(checkbox.getAttribute('data-multiplier')) || 1;
                             const urgency = parseFloat(checkbox.getAttribute('data-urgency')) || 1;
 
-                            // Категоризируем стоимость
                             if (checkbox.id.startsWith('type-')) {
                                 baseCost += price;
-                                if (!useManualHours) totalHours += hours;
+                                totalHours += hours;
                             } else if (checkbox.id.startsWith('detail-') || checkbox.id.startsWith('texture-')) {
                                 detailCost += price;
-                                if (!useManualHours) totalHours += hours;
+                                totalHours += hours;
                             } else if (checkbox.id.startsWith('add-')) {
                                 addonsCost += price;
-                                if (!useManualHours) totalHours += hours;
+                                totalHours += hours;
                             } else if (checkbox.id.startsWith('format-')) {
                                 formatsCost += price;
-                                if (!useManualHours) totalHours += hours;
+                                totalHours += hours;
                             } else if (checkbox.id.startsWith('license-')) {
                                 licenseMultiplier = multiplier;
                             } else if (checkbox.id.startsWith('urgency-')) {
@@ -1026,26 +1185,18 @@
                             }
                         }
                     });
-
                     timeSourceEl.innerHTML = '<i class="fas fa-calculator"></i> Рассчитано автоматически';
                 }
 
-                // Если не выбран тип модели и не введены ручные часы, устанавливаем минимальную базовую стоимость
                 if (baseCost === 0 && !useManualHours) {
                     baseCost = 2700;
-                    if (!useManualHours) totalHours = 3;
+                    totalHours = 3;
                 }
 
-                // Рассчитываем стоимость по времени как альтернативный вариант
                 const timeBasedCost = totalHours * hourRate;
-
-                // Итоговая стоимость (берем максимальную из стоимости по параметрам или по времени)
                 let finalCost = Math.max(baseCost + detailCost + addonsCost + formatsCost, timeBasedCost);
-
-                // Применяем коэффициенты
                 finalCost = finalCost * licenseMultiplier * urgencyMultiplier;
 
-                // Округляем до сотен
                 baseCost = Math.round(baseCost / 100) * 100;
                 detailCost = Math.round(detailCost / 100) * 100;
                 addonsCost = Math.round(addonsCost / 100) * 100;
@@ -1053,12 +1204,10 @@
                 totalHours = Math.round(totalHours * 10) / 10;
                 finalCost = Math.round(finalCost / 100) * 100;
 
-                // Форматируем числа с разделителями тысяч
                 function formatNumber(num) {
                     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
                 }
 
-                // Обновляем интерфейс
                 totalPriceEl.textContent = formatNumber(finalCost);
                 totalTimeEl.textContent = totalHours;
                 baseCostEl.textContent = `${formatNumber(baseCost)} ₽`;
@@ -1070,19 +1219,13 @@
                 hourRateEl.textContent = `${formatNumber(hourRate)} ₽/ч`;
                 finalCostEl.textContent = `${formatNumber(finalCost)} ₽`;
 
-                // Рассчитываем и отображаем сложность
                 let complexity = 0;
-
-                // Сложность на основе часов
                 if (totalHours < 10) complexity = 25;
                 else if (totalHours < 30) complexity = 50;
                 else if (totalHours < 60) complexity = 75;
                 else complexity = 95;
-
-                // Корректируем сложность на основе коэффициентов
                 complexity *= (licenseMultiplier * urgencyMultiplier) / 2;
                 complexity = Math.min(complexity, 100);
-
                 complexityBar.style.width = `${complexity}%`;
 
                 if (complexity < 30) complexityText.textContent = "Низкая";
@@ -1091,19 +1234,13 @@
                 else complexityText.textContent = "Очень высокая";
             }
 
-            // Функция сброса
-            function resetCalculator() {
-                const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-                checkboxes.forEach(checkbox => {
-                    checkbox.checked = false;
-                });
-
-                // Устанавливаем значения по умолчанию
+            function resetModelCalculator() {
+                const checkboxes = document.querySelectorAll('.params-column input[type="checkbox"]');
+                checkboxes.forEach(checkbox => checkbox.checked = false);
                 hourlyRateInput.value = 3000;
                 hourlyRateSlider.value = 3000;
                 manualHoursInput.value = '';
 
-                // Устанавливаем базовые значения
                 document.getElementById('type-simple').checked = true;
                 document.getElementById('detail-low').checked = true;
                 document.getElementById('texture-none').checked = true;
@@ -1111,7 +1248,6 @@
                 document.getElementById('urgency-normal').checked = true;
                 document.getElementById('format-fbx').checked = true;
 
-                // Обновляем интерфейс
                 totalPriceEl.textContent = "0";
                 totalTimeEl.textContent = "0";
                 baseCostEl.textContent = "0 ₽";
@@ -1126,99 +1262,296 @@
                 complexityText.textContent = "Низкая";
                 timeSourceEl.innerHTML = '<i class="fas fa-calculator"></i> Рассчитано автоматически';
 
-                // Пересчитываем
-                calculateCost();
+                calculateModelCost();
             }
 
-            // Экспорт конфигурации
-            function exportConfig() {
-                // Собираем отмеченные чекбоксы
-                const checkedCheckboxes = Array.from(document.querySelectorAll('input[type="checkbox"]:checked'))
-                    .map(cb => cb.id);
-                
-                // Значения полей
-                const config = {
-                    checkboxes: checkedCheckboxes,
-                    hourlyRate: hourlyRateInput.value,
-                    manualHours: manualHoursInput.value
-                };
+            calculateBtn.addEventListener('click', calculateModelCost);
+            resetBtn.addEventListener('click', resetModelCalculator);
 
-                // Создаём JSON и скачиваем
-                const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
+            // ========== Экспорт/импорт для моделирования ==========
+            const exportModelBtn = document.getElementById('export-model-btn');
+            const importModelBtn = document.getElementById('import-model-btn');
+            const importModelFile = document.getElementById('import-model-file');
+
+            function getModelState() {
+                const checkboxes = document.querySelectorAll('.params-column input[type="checkbox"]');
+                const checks = {};
+                checkboxes.forEach(cb => {
+                    checks[cb.id] = cb.checked;
+                });
+                return {
+                    hourlyRate: hourlyRateInput.value,
+                    manualHours: manualHoursInput.value,
+                    checks: checks
+                };
+            }
+
+            function setModelState(state) {
+                hourlyRateInput.value = state.hourlyRate;
+                hourlyRateSlider.value = state.hourlyRate;
+                manualHoursInput.value = state.manualHours;
+                // сбросить все чекбоксы сначала
+                const checkboxes = document.querySelectorAll('.params-column input[type="checkbox"]');
+                checkboxes.forEach(cb => cb.checked = false);
+                // установить сохранённые
+                Object.keys(state.checks).forEach(id => {
+                    const cb = document.getElementById(id);
+                    if (cb) cb.checked = state.checks[id];
+                });
+                // после установки пересчитать
+                calculateModelCost();
+            }
+
+            exportModelBtn.addEventListener('click', function() {
+                const state = getModelState();
+                const json = JSON.stringify(state, null, 2);
+                const blob = new Blob([json], {
+                    type: 'application/json'
+                });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = '3d_calculator_config.json';
+                a.download = '3d_model_check.json';
                 a.click();
                 URL.revokeObjectURL(url);
-            }
+            });
 
-            // Импорт конфигурации
-            function importConfig(file) {
+            importModelBtn.addEventListener('click', function() {
+                importModelFile.click();
+            });
+
+            importModelFile.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
                 const reader = new FileReader();
-                reader.onload = (e) => {
+                reader.onload = function(ev) {
                     try {
-                        const config = JSON.parse(e.target.result);
-                        
-                        // Сбрасываем все чекбоксы
-                        document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
-                        
-                        // Устанавливаем сохранённые чекбоксы
-                        if (Array.isArray(config.checkboxes)) {
-                            config.checkboxes.forEach(id => {
-                                const cb = document.getElementById(id);
-                                if (cb) cb.checked = true;
-                            });
-                        }
-                        
-                        // Принудительно применяем правила групп (на случай конфликтов)
-                        enforceGroupRules();
-                        
-                        // Восстанавливаем поля ввода
-                        if (config.hourlyRate !== undefined) {
-                            hourlyRateInput.value = config.hourlyRate;
-                            hourlyRateSlider.value = config.hourlyRate;
-                        }
-                        if (config.manualHours !== undefined) {
-                            manualHoursInput.value = config.manualHours;
-                        }
-                        
-                        // Пересчитываем стоимость
-                        calculateCost();
-                    } catch (error) {
-                        alert('Ошибка при загрузке файла: некорректный формат');
+                        const state = JSON.parse(ev.target.result);
+                        setModelState(state);
+                    } catch (err) {
+                        alert('Ошибка при загрузке файла: неверный формат');
                     }
+                    importModelFile.value = ''; // очистить для повторного выбора
                 };
                 reader.readAsText(file);
+            });
+
+            // ========== Калькулятор 3D-печати (второй) ==========
+            const printMaterialPrice = document.getElementById('print-material-price');
+            const printDensity = document.getElementById('print-density');
+            const printVolume = document.getElementById('print-volume');
+            const printFdm = document.getElementById('print-fdm');
+            const printSla = document.getElementById('print-sla');
+            const printInfill = document.getElementById('print-infill');
+            const printInfillValue = document.getElementById('print-infill-value');
+            const printQualityLow = document.getElementById('print-quality-low');
+            const printQualityMedium = document.getElementById('print-quality-medium');
+            const printQualityHigh = document.getElementById('print-quality-high');
+            const printSupports = document.getElementById('print-supports');
+            const printHourRate = document.getElementById('print-hour-rate');
+            const printManualHours = document.getElementById('print-manual-hours');
+
+            const printTotalPrice = document.getElementById('print-total-price');
+            const printTotalTime = document.getElementById('print-total-time');
+            const printTimeSource = document.getElementById('print-time-source');
+            const printMaterialWeight = document.getElementById('print-material-weight');
+            const printMaterialCost = document.getElementById('print-material-cost');
+            const printAutoTime = document.getElementById('print-auto-time');
+            const printHourRateDisplay = document.getElementById('print-hour-rate-display');
+            const printLaborCost = document.getElementById('print-labor-cost');
+            const printFinalCost = document.getElementById('print-final-cost');
+
+            const printCalculateBtn = document.getElementById('print-calculate-btn');
+            const printResetBtn = document.getElementById('print-reset-btn');
+
+            printInfill.addEventListener('input', function() {
+                printInfillValue.textContent = this.value + '%';
+                calculatePrintCost();
+            });
+
+            function toggleInfillGroup() {
+                const isSla = printSla.checked;
+                if (isSla) {
+                    printInfill.disabled = true;
+                    printInfill.value = 100;
+                    printInfillValue.textContent = '100%';
+                } else {
+                    printInfill.disabled = false;
+                    printInfill.value = 20;
+                    printInfillValue.textContent = '20%';
+                }
+                calculatePrintCost();
+            }
+            printFdm.addEventListener('change', toggleInfillGroup);
+            printSla.addEventListener('change', toggleInfillGroup);
+
+            const printInputs = [
+                printMaterialPrice, printDensity, printVolume, printInfill,
+                printHourRate, printManualHours, printSupports,
+                printQualityLow, printQualityMedium, printQualityHigh
+            ];
+            printInputs.forEach(input => input.addEventListener('input', calculatePrintCost));
+            printQualityLow.addEventListener('change', calculatePrintCost);
+            printQualityMedium.addEventListener('change', calculatePrintCost);
+            printQualityHigh.addEventListener('change', calculatePrintCost);
+            printSupports.addEventListener('change', calculatePrintCost);
+
+            function calculatePrintCost() {
+                const materialPricePerKg = parseFloat(printMaterialPrice.value) || 0;
+                const density = parseFloat(printDensity.value) || 1.25;
+                const volume = parseFloat(printVolume.value) || 0;
+                const isSla = printSla.checked;
+                const infill = isSla ? 100 : (parseFloat(printInfill.value) || 0);
+                const hourRate = parseFloat(printHourRate.value) || 0;
+
+                let quality = 'medium';
+                if (printQualityLow.checked) quality = 'low';
+                else if (printQualityHigh.checked) quality = 'high';
+
+                const supports = printSupports.checked;
+
+                const manualHours = parseFloat(printManualHours.value);
+                const useManual = !isNaN(manualHours) && manualHours > 0;
+
+                const weightGrams = volume * density * (infill / 100);
+                const materialCost = (weightGrams / 1000) * materialPricePerKg;
+
+                let autoHours = 0;
+                if (volume > 0) {
+                    let speed = 0;
+                    if (isSla) {
+                        if (quality === 'low') speed = 12;
+                        else if (quality === 'medium') speed = 8;
+                        else speed = 5;
+                    } else {
+                        if (quality === 'low') speed = 20;
+                        else if (quality === 'medium') speed = 15;
+                        else speed = 10;
+                    }
+                    autoHours = volume / speed;
+                    if (supports) autoHours *= 1.2;
+                }
+
+                const totalHours = useManual ? manualHours : autoHours;
+                const laborCost = totalHours * hourRate;
+                const finalCost = materialCost + laborCost;
+
+                function formatNumber(num) {
+                    return Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+                }
+
+                printTotalPrice.textContent = formatNumber(finalCost);
+                printTotalTime.textContent = totalHours.toFixed(1);
+                printTimeSource.innerHTML = useManual ? '<i class="fas fa-user-edit"></i> Введено вручную' : '<i class="fas fa-calculator"></i> Рассчитано автоматически';
+                printMaterialWeight.textContent = weightGrams.toFixed(1) + ' г';
+                printMaterialCost.textContent = formatNumber(materialCost) + ' ₽';
+                printAutoTime.textContent = autoHours.toFixed(1) + ' ч';
+                printHourRateDisplay.textContent = hourRate + ' ₽/ч';
+                printLaborCost.textContent = formatNumber(laborCost) + ' ₽';
+                printFinalCost.textContent = formatNumber(finalCost) + ' ₽';
             }
 
-            // Обработчики кнопок
-            calculateBtn.addEventListener('click', calculateCost);
-            resetBtn.addEventListener('click', resetCalculator);
-            exportBtn.addEventListener('click', exportConfig);
-            
-            importBtn.addEventListener('click', () => {
-                importFileInput.click();
-            });
-            
-            importFileInput.addEventListener('change', (e) => {
-                const file = e.target.files[0];
-                if (file) {
-                    importConfig(file);
+            function resetPrintCalculator() {
+                printMaterialPrice.value = 2500;
+                printDensity.value = 1.25;
+                printVolume.value = 50;
+                printFdm.checked = true;
+                printSla.checked = false;
+                printInfill.value = 20;
+                printInfillValue.textContent = '20%';
+                printInfill.disabled = false;
+                printQualityMedium.checked = true;
+                printSupports.checked = false;
+                printHourRate.value = 200;
+                printManualHours.value = '';
+
+                calculatePrintCost();
+            }
+
+            printCalculateBtn.addEventListener('click', calculatePrintCost);
+            printResetBtn.addEventListener('click', resetPrintCalculator);
+
+            // ========== Экспорт/импорт для печати ==========
+            const exportPrintBtn = document.getElementById('export-print-btn');
+            const importPrintBtn = document.getElementById('import-print-btn');
+            const importPrintFile = document.getElementById('import-print-file');
+
+            function getPrintState() {
+                return {
+                    materialPrice: printMaterialPrice.value,
+                    density: printDensity.value,
+                    volume: printVolume.value,
+                    printType: printFdm.checked ? 'fdm' : 'sla',
+                    infill: printInfill.value,
+                    quality: printQualityLow.checked ? 'low' : (printQualityMedium.checked ? 'medium' : 'high'),
+                    supports: printSupports.checked,
+                    hourRate: printHourRate.value,
+                    manualHours: printManualHours.value
+                };
+            }
+
+            function setPrintState(state) {
+                printMaterialPrice.value = state.materialPrice;
+                printDensity.value = state.density;
+                printVolume.value = state.volume;
+                if (state.printType === 'fdm') {
+                    printFdm.checked = true;
+                    printSla.checked = false;
+                } else {
+                    printFdm.checked = false;
+                    printSla.checked = true;
                 }
-                importFileInput.value = ''; // Сбрасываем, чтобы можно было загрузить тот же файл повторно
+                printInfill.value = state.infill;
+                printInfillValue.textContent = state.infill + '%';
+                if (state.quality === 'low') printQualityLow.checked = true;
+                else if (state.quality === 'medium') printQualityMedium.checked = true;
+                else printQualityHigh.checked = true;
+                printSupports.checked = state.supports;
+                printHourRate.value = state.hourRate;
+                printManualHours.value = state.manualHours;
+                // обновить состояние infill (блокировка при SLA)
+                toggleInfillGroup();
+                calculatePrintCost();
+            }
+
+            exportPrintBtn.addEventListener('click', function() {
+                const state = getPrintState();
+                const json = JSON.stringify(state, null, 2);
+                const blob = new Blob([json], {
+                    type: 'application/json'
+                });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = '3d_print_check.json';
+                a.click();
+                URL.revokeObjectURL(url);
             });
 
-            // Инициализация с базовыми значениями
-            document.getElementById('type-simple').checked = true;
-            document.getElementById('detail-low').checked = true;
-            document.getElementById('texture-none').checked = true;
-            document.getElementById('license-personal').checked = true;
-            document.getElementById('urgency-normal').checked = true;
-            document.getElementById('format-fbx').checked = true;
+            importPrintBtn.addEventListener('click', function() {
+                importPrintFile.click();
+            });
 
-            // Первоначальный расчет
-            calculateCost();
+            importPrintFile.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    try {
+                        const state = JSON.parse(ev.target.result);
+                        setPrintState(state);
+                    } catch (err) {
+                        alert('Ошибка при загрузке файла: неверный формат');
+                    }
+                    importPrintFile.value = '';
+                };
+                reader.readAsText(file);
+            });
+
+            // Инициализация
+            resetModelCalculator();
+            toggleInfillGroup();
+            calculatePrintCost();
         });
     </script>
 </body>
